@@ -34,6 +34,10 @@ type unmarshalFunc func([]byte, interface{}) error
 
 // sourceFrom ...
 func sourceFrom(f unmarshalFunc, r io.Reader) (conf.Sourcer, error) {
+	if r == nil {
+		return &genericSourcer{m: nil}, nil
+	}
+
 	src, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err
