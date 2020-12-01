@@ -1,19 +1,12 @@
 # sourcers
 
-Additional `Sourcers` for [ardanlabs/conf](https://github.com/ardanlabs/conf/).
+Adds simple, additional `Sourcers` to [ardanlabs/conf](https://github.com/ardanlabs/conf/).
 
-## Interface definition
 
-```go
-// Parse parses configuration into the provided struct.
-func Parse(args []string, namespace string, cfgStruct interface{}, sources ...Sourcer) error {
+## Rationale
 
-// Sourcer provides the ability to source data from a configuration source.
-// Consider the use of lazy-loading for sourcing large datasets or systems.
-type Sourcer interface {
+You like using `conf` and don't want to switch to [spf13/viper](https://github.com/spf13/viper), but your command line or list of environment variables is getting long.  You wish you could simply drop a `config.json`, `config.yaml`, or `config.toml` in your container to simplify your life.
 
-	// Source takes the field key and attempts to locate that key in its
-	// configuration data. Returns true if found with the value.
-	Source(fld Field) (string, bool)
-}
-```
+Or, you want to write your own [Sourcer](https://github.com/ardanlabs/conf/blob/master/conf.go#L28-L33) and aren't quite sure how.
+
+This package is your answer.
