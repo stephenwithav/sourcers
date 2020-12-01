@@ -53,6 +53,13 @@ func TestParse(t *testing.T) {
 			config{9, "B", false, "", ip{"localhost", "127.0.0.0", []string{"127.0.0.1:200", "127.0.0.1:829"}}, Embed{"bill", time.Second}},
 		},
 		{
+			"reader",
+			nil,
+			nil,
+			strings.NewReader(`{"a_string": "s", "d": "1m", "ignored": true, "bool": true}`),
+			config{9, "s", true, "", ip{"localhost", "127.0.0.0", []string{"127.0.0.1:200", "127.0.0.1:829"}}, Embed{"bill", time.Minute}},
+		},
+		{
 			"env",
 			map[string]string{"TEST_AN_INT": "1", "TEST_A_STRING": "s", "TEST_BOOL": "TRUE", "TEST_SKIP": "SKIP", "TEST_IP_NAME_VAR": "local", "TEST_NAME": "andy", "TEST_DURATION": "1m"},
 			nil,
