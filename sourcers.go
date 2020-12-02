@@ -1,15 +1,12 @@
 package sourcers
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"strings"
 
-	"github.com/BurntSushi/toml"
 	"github.com/ardanlabs/conf"
-	"gopkg.in/yaml.v3"
 )
 
 type genericSourcer struct {
@@ -30,10 +27,14 @@ func (s *genericSourcer) Source(fld conf.Field) (string, bool) {
 	return val, found
 }
 
-type unmarshalFunc func([]byte, interface{}) error
+type UnmarshalFunc func([]byte, interface{}) error
 
-// sourceFrom ...
-func sourceFrom(f unmarshalFunc, r io.Reader) (conf.Sourcer, error) {
+// From returns a conf.Sourcer and an error when receiving an
+// UnmarshalFunc and an io.Reader containing the configuration in the
+// requested format.
+//
+// This is a helper func for subpackages and custom formats.
+func From(f UnmarshalFunc, r io.Reader) (conf.Sourcer, error) {
 	if r == nil {
 		return &genericSourcer{m: nil}, nil
 	}
@@ -62,25 +63,4 @@ func sourceFrom(f unmarshalFunc, r io.Reader) (conf.Sourcer, error) {
 	}
 
 	return &genericSourcer{m: m}, nil
-}
-
-// NewSourceJSON accepts a reader containing a valid JSON struct and
-// returns a ardanlabs/conf.Sourcer for use by that package's Parse
-// method.
-func NewSourceJSON(r io.Reader) (conf.Sourcer, error) {
-	return sourceFrom(json.Unmarshal, r)
-}
-
-// NewSourceYAML accepts a reader containing a valid YAML struct and
-// returns a ardanlabs/conf.Sourcer for use by that package's Parse
-// method.
-func NewSourceYAML(r io.Reader) (conf.Sourcer, error) {
-	return sourceFrom(yaml.Unmarshal, r)
-}
-
-// NewSourceTOML accepts a reader containing a valid TOML struct and
-// returns a ardanlabs/conf.Sourcer for use by that package's Parse
-// method.
-func NewSourceTOML(r io.Reader) (conf.Sourcer, error) {
-	return sourceFrom(toml.Unmarshal, r)
 }
